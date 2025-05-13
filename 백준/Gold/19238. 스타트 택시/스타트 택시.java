@@ -6,16 +6,12 @@ class Waiting{
     int index;
     int sr;
     int sc;
-    int er;
-    int ec;
     int distance;
 
-    public Waiting(int index, int sr, int sc, int er, int ec, int distance) {
+    public Waiting(int index, int sr, int sc,  int distance) {
         this.index = index;
         this.sr = sr;
         this.sc = sc;
-        this.er = er;
-        this.ec = ec;
         this.distance = distance;
     }
 }
@@ -54,7 +50,7 @@ public class Main{
         return 0<=r && r<N && 0<=c && c<N;
     }
 
-    static public void bfsToGoal(int sr,int sc,int er,int ec){
+    static public void bfsToGoal(int sr,int sc){
         for(int[] row : distance){
             Arrays.fill(row, -1);
         }
@@ -102,8 +98,7 @@ public class Main{
         PriorityQueue<Waiting> pq = new PriorityQueue<Waiting>(new WaitingComparator());
         for(int i=0;i<M;i++){
             if(!visited[i] && distance[passenger[i][0]][passenger[i][1]] != -1){
-                pq.offer(new Waiting(i,passenger[i][0],passenger[i][1],
-                        passenger[i][2],passenger[i][3],distance[passenger[i][0]][passenger[i][1]]));
+                pq.offer(new Waiting(i,passenger[i][0],passenger[i][1], distance[passenger[i][0]][passenger[i][1]]));
             }
         }
         if(!pq.isEmpty()){
@@ -157,7 +152,7 @@ public class Main{
                 System.out.println(-1);
                 return;
             }
-            bfsToGoal(passenger[goal[0]][0],passenger[goal[0]][1],passenger[goal[0]][2],passenger[goal[0]][3]);
+            bfsToGoal(passenger[goal[0]][0],passenger[goal[0]][1]);
             int use = distance[passenger[goal[0]][2]][passenger[goal[0]][3]];
             if(use == -1 || gas-use<0){
                 System.out.println(-1);
