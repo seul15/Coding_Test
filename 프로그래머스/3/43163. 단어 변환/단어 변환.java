@@ -1,49 +1,39 @@
 import java.util.*;
 
 class Solution {
-    public int bfs(String s,String target,String[] words, int[] visited){
-        Queue<Integer>q = new LinkedList<>();
-        
-        q.add(words.length);
-        visited[words.length] = 0;
-        while(!q.isEmpty()){
-            int current_index = q.remove();
-            String current;
-            if(current_index == words.length) current = s;
-            else current = words[current_index];
-
-            for(int i=0; i<words.length; i++){
-                if(visited[i]!= -1) continue;
-                int count=0;
-                for(int j=0; j<words[i].length(); j++){
-                    if(current.charAt(j) != words[i].charAt(j)) count++;
-                    if(count>1) break;
-                }
-
-                if(count==1){
-                    q.add(i);
-                    visited[i] = visited[current_index]+1;
-                    if(words[i].equals(target)) return visited[i];
-                }
-            }
+    static boolean[] visited;
+    static int answer = 0;
+    static boolean check(String s1, String s2){
+        int count=0;
+        for(int i=0; i<s1.length(); i++){
+            if(s1.charAt(i) != s2.charAt(i)) count++;
+            if(count>1) return false;
         }
-        return 0;
+        if(count==1) return true;
+        else return false;
     }
     
-    
-    public int solution(String begin, String target, String[] words) {
-        boolean found = false;
-        int[] visited = new int[words.length+1];
-        Arrays.fill(visited,-1);
+    static void dfs(String begin, String target, String words[],int count){
+        if(begin.equals(target)){
+            answer = count;
+            return;
+        }
         
-        for(String word:words){
-            if(word.equals(target)){
-                found = true;
-                break;
+        for(int i=0; i<words.length; i++){
+            String current = words[i];
+            if(check(begin,current) && !visited[i]){
+                visited[i] = true;
+                dfs(current,target,words,count+1);
+                visited[i] = false;
             }
         }
-        if(!found) return 0; // target 만들기 불가
+    }
+    
+    public int solution(String begin, String target, String[] words) {
+        answer = 0;
+        visited = new boolean[words.length];
+        dfs(begin,target,words,0);
         
-        return bfs(begin,target,words,visited);
+        return answer;
     }
 }
