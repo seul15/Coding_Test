@@ -1,40 +1,51 @@
 import java.util.*;
 
 class Solution {
+    static boolean[] visited;
     static List<Integer>[] graph;
     static int answer;
     
-    static void dfs(int sheep, int wolf, List<Integer> next,int[] info){
-        if(sheep<=wolf) return;
+    static void dfs(int node,int sheep, int wolf, List<Integer> next,int[] info){
+        visited[node] = true;
+        if(info[node] == 0) sheep++;
+        else wolf++;
+        
+        if(wolf>=sheep){
+            visited[node] = false;
+            return;
+        }
         answer = Math.max(answer,sheep);
         
-        for(int current: next){
-            List<Integer> copy = new ArrayList<>(next);
-            copy.remove(Integer.valueOf(current));
-            if(graph[current] != null){
-                for(int child: graph[current]){
-                    copy.add(child);
-                }
-            }
-            if(info[current] == 0){
-                dfs(sheep+1,wolf,copy,info);
-            }
-            else{
-                dfs(sheep,wolf+1,copy,info);
+        List<Integer> copy = new ArrayList<>(next);
+        copy.remove(Integer.valueOf(node));
+        
+        for(int n: graph[node]){
+            copy.add(n);
+        } 
+
+        for(int n: copy){
+            if(!visited[n]){
+                dfs(n,sheep,wolf,copy,info);
+                visited[n] = false;
             }
         }
+        visited[node] = false;
     }
+    
     public int solution(int[] info, int[][] edges) {
-        answer = 0;
-        graph = new ArrayList[info.length];
-        for(int i=0; i<info.length; i++){
+        int len = info.length;
+        answer =0;
+        visited = new boolean[len];
+        graph = new ArrayList[len];
+        for(int i=0; i<len; i++){
             graph[i] = new ArrayList<>();
         }
-        for(int[] edge: edges){
+        for(int[] edge : edges){
             graph[edge[0]].add(edge[1]);
         }
-        dfs(1,0,graph[0],info);
-        
+        List<Integer> next = new ArrayList<>();
+        next.add(0);
+        dfs(0,0,0,next, info);
         return answer;
     }
 }
