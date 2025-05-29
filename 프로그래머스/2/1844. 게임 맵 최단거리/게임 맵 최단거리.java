@@ -2,39 +2,39 @@ import java.util.*;
 
 class Solution {
     static boolean[][] visited;
-    static int N, M;
-    static int[] dr= {1,0,0,-1};
-    static int[] dc = {0,1,-1,0};
+    static int[] dr = {1,-1,0,0};
+    static int[] dc = {0,0,1,-1};
+    static int N,M,answer;
     
-    public boolean isValid(int r, int c){
+    static boolean isValid(int r, int c){
         return 0<=r && r<N && 0<=c && c<M;
     }
     
-    public int bfs(int r, int c,int count, int[][] maps){
+    static int bfs(int r, int c,int[][] maps){
         Queue<int[]> q = new LinkedList<>();
-        q.offer(new int[]{r,c,count});
-        visited[r][c]= true;
-        
+        q.offer(new int[]{r,c,1});
+        visited[r][c] = true;
         while(!q.isEmpty()){
-            int[] current = q.remove();
+            int[] current = q.poll();
+            int cr = current[0]; int cc = current[1]; int count = current[2];
+            if(cr==N-1 && cc==M-1) return count;
             for(int i=0; i<4; i++){
-                int nr = current[0]+dr[i];
-                int nc = current[1]+dc[i];
-                if(isValid(nr,nc) && !visited[nr][nc] && maps[nr][nc] == 1){
+                int nr= cr+dr[i]; int nc=cc+dc[i];
+                if(isValid(nr,nc) && maps[nr][nc] == 1 && !visited[nr][nc]){
+                    q.offer(new int[]{nr,nc,count+1});
                     visited[nr][nc] = true;
-                    q.offer(new int[]{nr,nc,current[2]+1});
-                    if(nr==N-1 && nc == M-1) return current[2]+1;
                 }
             }
         }
         return -1;
     }
-        
+    
     public int solution(int[][] maps) {
+        answer = Integer.MAX_VALUE;
         N = maps.length;
         M = maps[0].length;
         visited = new boolean[N][M];
-
-        return bfs(0,0,1,maps);
+        
+        return bfs(0,0,maps);
     }
 }
