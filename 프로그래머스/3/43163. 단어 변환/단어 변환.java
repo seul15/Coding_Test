@@ -1,39 +1,39 @@
 import java.util.*;
 
 class Solution {
-    static boolean[] visited;
-    static int answer = 0;
+    static Map<String,Integer> dist;
+    
     static boolean check(String s1, String s2){
         int count=0;
         for(int i=0; i<s1.length(); i++){
-            if(s1.charAt(i) != s2.charAt(i)) count++;
-            if(count>1) return false;
+            if(s1.charAt(i) != s2.charAt(i)) count++; 
         }
-        if(count==1) return true;
-        else return false;
+        return count==1;
     }
     
-    static void dfs(String begin, String target, String words[],int count){
-        if(begin.equals(target)){
-            answer = count;
-            return;
-        }
+    static int bfs(String begin, String target, String[] words){
+        Queue<String> q = new LinkedList<>();
+        q.offer(begin);
+        dist.put(begin,0);
         
-        for(int i=0; i<words.length; i++){
-            String current = words[i];
-            if(check(begin,current) && !visited[i]){
-                visited[i] = true;
-                dfs(current,target,words,count+1);
-                visited[i] = false;
+        while(!q.isEmpty()){
+            String current = q.poll();
+            if(current.equals(target)) return dist.get(current); 
+            for(String w: words){
+                if(dist.get(w) == null && check(current,w)){
+                    q.offer(w);
+                    dist.put(w,dist.get(current)+1);
+                }
             }
         }
+        return 0;
     }
     
+    
     public int solution(String begin, String target, String[] words) {
-        answer = 0;
-        visited = new boolean[words.length];
-        dfs(begin,target,words,0);
+        if(!Arrays.asList(words).contains(target)) return 0;
+        dist = new HashMap<>();
         
-        return answer;
+        return bfs(begin,target,words);
     }
 }
