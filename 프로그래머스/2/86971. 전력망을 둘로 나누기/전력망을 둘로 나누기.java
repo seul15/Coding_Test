@@ -4,51 +4,51 @@ class Solution {
     static List<Integer>[] graph;
     static boolean[] visited;
     
-    static int bfs(int index){
-        int count=1;
-        Arrays.fill(visited,false);
-        Queue<Integer> q = new LinkedList<>();
-        q.offer(index);
-        visited[index] = true;
+    static int bfs(int i){
+        Queue<Integer> q= new LinkedList<>();
+        Arrays.fill(visited, false);
+        q.offer(i);
+        visited [i] = true;
+        int count =1;
+        
         while(!q.isEmpty()){
-            int current = q.remove();
+            int current = q.poll();
             for(int next: graph[current]){
                 if(!visited[next]){
                     q.offer(next);
+                    visited[next] =true;
                     count++;
-                    visited[next] = true;
                 }
             }
         }
         return count;
-    } 
+    }
     
     public int solution(int n, int[][] wires) {
         int answer = Integer.MAX_VALUE;
-        graph = new ArrayList[n+1];
-        for(int i=0; i<=n ; i++){
+        graph = new ArrayList[n];
+        visited = new boolean[n];
+        for(int i=0; i<n; i++){
             graph[i] = new ArrayList<>();
         }
-        
         for(int[] wire: wires){
-            graph[wire[0]].add(wire[1]);
-            graph[wire[1]].add(wire[0]);
+            int w1 = wire[0]-1, w2=wire[1]-1;
+            graph[w1].add(w2);
+            graph[w2].add(w1);
         }
         
-        visited = new boolean[n+1];
         for(int[] wire: wires){
-            graph[wire[0]].remove(new Integer(wire[1]));
-            graph[wire[1]].remove(new Integer(wire[0]));
+            int w1 = wire[0]-1, w2=wire[1]-1;
+            graph[w1].remove(Integer.valueOf(w2));
+            graph[w2].remove(Integer.valueOf(w1));
             
-            int c1 = bfs(wire[0]);
-            int c2 = n-c1;
-            answer = Math.min(answer, Math.abs(c1-c2));
+            int net = bfs(w1);
+            System.out.println(net);
+            answer = Math.min(answer, Math.abs(n- 2*net));
             
-            
-            graph[wire[0]].add(wire[1]);
-            graph[wire[1]].add(wire[0]);
+            graph[w1].add(w2);
+            graph[w2].add(w1);
         }
-        
         return answer;
     }
 }
