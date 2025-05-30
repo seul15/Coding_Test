@@ -8,31 +8,31 @@ class Solution {
         if(info[node] == 0) sheep++;
         else wolf++;
         
-        if(wolf>= sheep) return;
-        
+        if(wolf>=sheep) return;
         answer = Math.max(answer,sheep);
         
         List<Integer> copy = new ArrayList<>(next);
         copy.remove(Integer.valueOf(node));
         copy.addAll(graph[node]);
         
-        for(int i: copy){
-            dfs(i,sheep,wolf,copy,info);
+        for(int c: copy){
+            dfs(c,sheep,wolf,copy,info);
         }
     }
-    
     public int solution(int[] info, int[][] edges) {
         graph = new ArrayList[info.length];
         for(int i=0; i<info.length; i++){
             graph[i] = new ArrayList<>();
         }
-        for(int[] edge: edges){
+        for(int[] edge : edges){
             graph[edge[0]].add(edge[1]);
         }
+        answer = 0;
         
-        List<Integer> next = new ArrayList<>();
+        List<Integer> next= new ArrayList<>();
         next.add(0);
         dfs(0,0,0,next,info);
+        
         return answer;
     }
 }
