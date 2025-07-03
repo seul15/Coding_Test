@@ -15,16 +15,16 @@ class Solution {
         
         Queue<int[]> q = new PriorityQueue<>((e1,e2)->e1[1]-e2[1]);
         int[] start = {s,a,b};
-        for(int i=0; i<3; i++){
+        for(int i=0;i<3; i++){
             int[] d= dist[i];
-            d[start[i]] =0;
             q.add(new int[]{start[i],0});
+            d[start[i]] = 0;
             while(!q.isEmpty()){
-                int[] cur = q.poll();
+                int[] cur= q.poll();
                 for(int j=1; j<=n; j++){
                     if(cost[cur[0]][j] == 0) continue;
-                    if(d[j] > cur[1] + cost[cur[0]][j]){
-                        d[j] = cur[1] + cost[cur[0]][j];
+                    if(d[j]>cur[1]+cost[cur[0]][j]){
+                        d[j] = cur[1]+cost[cur[0]][j];
                         q.add(new int[]{j,d[j]});
                     }
                 }
@@ -35,9 +35,9 @@ class Solution {
         for(int i=1; i<=n; i++){
             int sum=0;
             for(int[] d: dist){
-                sum+=d[i];
+                sum += d[i];
             }
-            answer = Math.min(sum,answer);
+            answer = Math.min(answer,sum);
         }
         
         return answer;
