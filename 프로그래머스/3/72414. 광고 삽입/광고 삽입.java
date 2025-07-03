@@ -1,47 +1,46 @@
 class Solution {
-    static int timeToSecond(String time){
-        String[] t = time.split(":");
-        return Integer.parseInt(t[0]) * 3600 +
-               Integer.parseInt(t[1]) * 60 +
-               Integer.parseInt(t[2]);
+    static int second(String time){
+        String[] temp = time.split(":");
+        return Integer.parseInt(temp[0]) * 3600 +
+            Integer.parseInt(temp[1]) * 60+
+            Integer.parseInt(temp[2]);
     }
     
-    static String secondToTime(int sec){
-        int h = sec / 3600;
-        sec %= 3600;
-        int m = sec / 60;
-        int s = sec % 60;
-        return String.format("%02d:%02d:%02d", h, m, s);
+    static String time(int num){
+        int h = num/3600;
+        num %= 3600;
+        int m = num /60;
+        int s = num %60;
+        return String.format("%02d:%02d:%02d",h,m,s);
     }
+    
     
     public String solution(String play_time, String adv_time, String[] logs) {
-        int play = timeToSecond(play_time);
-        int adv = timeToSecond(adv_time);
+        int play = second(play_time);
+        int adv = second(adv_time);
         long[] prefix = new long[play+1];
+        
         for(String log: logs){
-            String[] l = log.split("-");
-            int start = timeToSecond(l[0]);
-            int end = timeToSecond(l[1]);
+            String[] t = log.split("-");
+            int start = second(t[0]);
+            int end = second(t[1]);
             prefix[start]++;
             prefix[end]--;
         }
-        for(int i=0; i<2; i++){
-            for(int j=1;j<=play; j++){
-                prefix[j] = prefix[j] + prefix[j-1];
+        
+        for(int i=1; i<=play; i++) prefix[i] += prefix[i-1];
+        for(int i=1; i<=play; i++) prefix[i] += prefix[i-1];
+        
+        long maxview = prefix[adv-1];
+        int answer = 0;
+        for(int i=adv; i<=play; i++){
+            long cur = prefix[i] - prefix[i-adv];
+            if(cur>maxview){
+                maxview = cur;
+                answer = i-adv+1;
             }
         }
         
-        long maxView = prefix[adv - 1]; 
-        int maxStartTime = 0;
-
-        for(int i = adv; i <= play; i++){
-            long currentView = prefix[i] - prefix[i - adv];
-            if(currentView > maxView){
-                maxView = currentView;
-                maxStartTime = i - adv + 1;
-            }
-        }
-        
-        return secondToTime(maxStartTime);
+        return time(answer);
     }
 }
