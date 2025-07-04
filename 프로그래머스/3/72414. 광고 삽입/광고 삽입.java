@@ -1,18 +1,18 @@
 import java.util.*;
 
 class Solution {
-    static int second(String time){
-        String[] t = time.split(":");
-        return Integer.parseInt(t[0]) * 3600 +
-            Integer.parseInt(t[1])*60 +
-            Integer.parseInt(t[2]);
+    static int second(String s){
+        String[] time = s.split(":");
+        return Integer.parseInt(time[0])*3600+
+            Integer.parseInt(time[1])*60+
+            Integer.parseInt(time[2]);
     }
     
-    static String time(int sec){
-        int h = sec/3600;
-        sec %= 3600;
-        int m = sec/60;
-        int s = sec%60;
+    static String time(int t){
+        int h = t/3600;
+        t %= 3600;
+        int m = t/60;
+        int s = t%60;
         return String.format("%02d:%02d:%02d",h,m,s);
     }
     
@@ -22,25 +22,27 @@ class Solution {
         long[] prefix = new long[play+1];
         
         for(String log: logs){
-            String[] l = log.split("-");
-            int start = second(l[0]);
-            int end = second(l[1]);
+            String[] t = log.split("-");
+            int start = second(t[0]);
+            int end = second(t[1]);
             prefix[start]++;
             prefix[end]--;
         }
         
-        for(int i=1; i<=play; i++) prefix[i] += prefix[i-1];
-        for(int i=1; i<=play; i++) prefix[i] += prefix[i-1];
+        for(int i=1; i<play; i++) prefix[i] += prefix[i-1];
+        for(int i=1; i<play; i++) prefix[i] += prefix[i-1];
         
-        long maxview = prefix[adv];
+        long maxview = prefix[adv-1];
         int maxtime =0;
-        for(int i= adv; i<=play; i++){
-            long curview = prefix[i] - prefix[i-adv];
-            if(curview> maxview){
+        for(int i=adv; i<=play; i++){
+            long curview = prefix[i]- prefix[i-adv];
+            if(curview>maxview){
                 maxview = curview;
                 maxtime = i-adv+1;
             }
         }
+        
         return time(maxtime);
+        
     }
 }
