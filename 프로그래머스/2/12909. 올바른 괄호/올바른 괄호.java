@@ -2,14 +2,17 @@ import java.util.*;
 
 class Solution {
     boolean solution(String s) {
-        Stack<Character> bracket = new Stack<>();
-
+        Stack<Character> stack = new Stack<>();
         for(int i=0; i<s.length(); i++){
-            if(s.charAt(i)=='(') bracket.push(s.charAt(i));
-            else if(!bracket.isEmpty() && s.charAt(i)==')' && bracket.peek()=='(') bracket.pop();
+            char c = s.charAt(i);
+            if(!stack.isEmpty()){
+                if(c == ')' && stack.peek() == '(') stack.pop();
+                else if(c == '(') stack.push(c);
+            }
+            else if(c=='(') stack.push(c);
             else return false;
         }
-
-        return bracket.isEmpty();
+        
+        return stack.isEmpty() ? true : false;
     }
 }
