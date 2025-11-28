@@ -2,19 +2,29 @@ import java.util.*;
 
 class Solution {
     public int solution(int[][] jobs) {
-        Arrays.sort(jobs,(a,b)->a[0]-b[0]);
-        Queue<int[]> q = new PriorityQueue<>((a,b)->a[1]-b[1]);
-        int cur=0,total=0,index=0,n=jobs.length;
-        while(!q.isEmpty() || index<n){
-            while(index<n && cur>= jobs[index][0]) q.add(jobs[index++]);
-            if(!q.isEmpty()){
-                int[] job = q.poll();
-                cur += job[1];
-                total += cur-job[0];
-            } else{
-                cur = jobs[index][0];
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->{
+            if(a[1] == b[1]) return a[0]-b[0];
+            return a[1]-b[1];
+        });
+        
+        Arrays.sort(jobs, (a,b)-> a[0]-b[0]);
+        
+        int index =0;
+        int time =0;
+        int answer =0;
+        while(index<jobs.length || !pq.isEmpty()){
+            while(index<jobs.length && jobs[index][0]<= time){
+                pq.offer(new int[]{jobs[index][0], jobs[index][1]});
+                index++;
             }
+            if(pq.isEmpty()){
+                time = jobs[index][0];
+                continue;
+            }
+            int[] current = pq.poll();
+            time += current[1];
+            answer += (time - current[0]);
         }
-        return total/n;
+        return answer/jobs.length;
     }
 }
