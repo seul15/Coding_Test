@@ -1,32 +1,42 @@
 import java.util.*;
 
 class Solution {
-    static boolean[] visited;
-    static Set<Integer> n = new HashSet<>();
+    char[] digits;
+    boolean[] visited;
+    Set<Integer> answer = new HashSet<>();
     
-    static boolean check(int num){
+    boolean isPrime(int num){
         if(num<2) return false;
-        for(int i=2; i<=Math.sqrt(num); i++){
-            if(num%i ==0) return false;
+        if(num == 2) return true;
+        for(int i=2; i<=(int)Math.floor(Math.sqrt(num)); i++){
+            if(num%i == 0) return false;
         }
         return true;
     }
     
-    static void backtracking(String temp, String numbers){
-        if(!temp.isEmpty() && check(Integer.parseInt(temp))){
-            n.add(Integer.parseInt(temp));
+    void dfs(String current){
+        if(current.length() >= 1){
+           int c = Integer.parseInt(current);
+            if(isPrime(c)){
+                answer.add(c);
+            }
         }
-        for(int i=0; i<numbers.length(); i++){
-            if(visited[i]) continue;
-            visited[i] = true;
-            backtracking(temp+numbers.charAt(i),numbers);
-            visited[i] = false;
+        
+        for(int idx=0; idx<digits.length; idx++){
+            if(visited[idx] == false){
+                visited[idx] = true;
+                dfs(current+digits[idx]);
+                visited[idx] = false;
+            }
         }
     }
     
     public int solution(String numbers) {
-        visited = new boolean[numbers.length()];
-        backtracking("",numbers);
-        return n.size();
+        digits = numbers.toCharArray();
+        visited = new boolean[digits.length];
+        
+        dfs("");
+        
+        return answer.size();
     }
 }
