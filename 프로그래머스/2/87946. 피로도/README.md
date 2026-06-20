@@ -1,10 +1,10 @@
 # [level 2] 피로도 - 87946 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/87946?language=java) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/87946?utm_source=chatgpt.com) 
 
 ### 성능 요약
 
-메모리: 74.4 MB, 시간: 3.10 ms
+메모리: 76.2 MB, 시간: 2.58 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 02월 11일 01:40:15
+2026년 06월 20일 21:24:39
 
 ### 문제 설명
 

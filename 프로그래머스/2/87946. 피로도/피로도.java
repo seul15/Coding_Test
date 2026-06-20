@@ -1,31 +1,27 @@
+import java.util.*;
+
 class Solution {
-    int count;
     boolean[] visited;
     int answer;
     
-    void dfs(int hp, int[][] dungeons){
-        answer = Math.max(count,answer);
+    void dfs(int hp, int count, int[][] dungeons){
+        answer = Math.max(answer, count);
         
-        for(int idx=0; idx<visited.length; idx++){
-            if(visited[idx] == false){
-                int minHp = dungeons[idx][0];
-                int useHp = dungeons[idx][1];
-                if(hp>= minHp){
-                    visited[idx]=true;
-                    count++;
-                    dfs(hp-useHp,dungeons);
-                    visited[idx]=false;
-                    count--;
-                }
+        for(int i=0; i<dungeons.length; i++){
+            if(!visited[i] && hp>=dungeons[i][0]){
+                visited[i] = true;
+                count++;
+                dfs(hp-dungeons[i][1],count,dungeons);
+                count--;
+                visited[i] = false;
             }
         }
     }
     
     public int solution(int k, int[][] dungeons) {
+        answer = 0;
         visited = new boolean[dungeons.length];
-        count =0;
-        answer =0;
-        dfs(k,dungeons);
+        dfs(k,0,dungeons);
         return answer;
     }
 }
