@@ -1,40 +1,18 @@
 import java.util.*;
 
 class Solution {
-    class State{
-        String word;
-        int depth;
+    int bfs(String begin, String target, String[] words, boolean[] visited){
+        Queue<Object[]> q = new LinkedList<>();
+        q.offer(new Object[]{begin,0});
         
-        public State(String word, int depth){
-            this.word = word;
-            this.depth = depth;
-        }
-    }
-    
-    boolean check(String A, String B){
-        int count =0;
-        for(int i=0; i<A.length(); i++){
-            if(A.charAt(i) != B.charAt(i)) count++;
-            if(count>1) return false;
-        }
-        
-        return (count==1)?true: false;
-    }
-    
-    int bfs(String begin, String target, String[] words){
-        boolean[] visited = new boolean[words.length];
-        Queue<State> q = new LinkedList<>();
-        
-        q.offer(new State(begin, 0));
         while(!q.isEmpty()){
-            State now = q.poll();
-            String nw = now.word;
-            int nd = now.depth;
-            
+            Object[] n = q.poll();
+            String now = (String)n[0];
+            int change = (int)n[1];
+            if(now.equals(target)) return change;
             for(int i=0; i<words.length; i++){
-                if(check(nw, words[i]) && !visited[i]){
-                    if(words[i].equals(target)) return nd+1;
-                    q.offer(new State(words[i],nd+1));
+                if(!visited[i] && check(now,words[i])){
+                    q.offer(new Object[]{words[i],change+1});
                     visited[i] = true;
                 }
             }
@@ -42,12 +20,18 @@ class Solution {
         return 0;
     }
     
-    public int solution(String begin, String target, String[] words) {
-        for(int i=0; i<words.length; i++){
-            if(words[i].equals(target)){
-                return bfs(begin, target, words);   
-            }
+    boolean check(String a, String b){
+        int dif =0;
+        for(int i=0; i<a.length(); i++){
+            if(a.charAt(i) != b.charAt(i)) dif++;
+            if(dif>=2) return false;
         }
-        return 0;
+        if(dif==1) return true;
+        else return false;
+    }
+    
+    public int solution(String begin, String target, String[] words) {
+        boolean[] visited = new boolean[words.length];
+        return bfs(begin, target, words, visited);
     }
 }
