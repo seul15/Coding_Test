@@ -1,48 +1,36 @@
 import java.util.*;
 
-class Solution {  
-    int bfs(int[][] maps){
-        // 상하좌우 이동을 위한 배열
-        int[] dx= {0,0,1,-1};
-        int[] dy= {-1,1,0,0};
-        int N = maps[0].length; // 가로
-        int M = maps.length; // 세로
-        boolean[][] visited = new boolean[M][N];
-        
+class Solution {
+    int[] dx = {0,0,1,-1};
+    int[] dy = {1,-1,0,0};
+    
+    int bfs(int w,int h, boolean[][] visited, int[][] maps){
         Queue<int[]> q = new LinkedList<>();
         q.offer(new int[]{0,0,1});
-        visited[0][0] = true;
+        
         while(!q.isEmpty()){
             int[] now = q.poll();
-            int nx = now[0];
-            int ny = now[1];
-            int nmove = now[2];
-            
+            if(now[0] == w-1 && now[1] == h-1) return now[2];
+            visited[now[1]][now[0]] = true;
             for(int i=0; i<4; i++){
-                int nextx = nx+dx[i];
-                int nexty = ny+dy[i];
-
-                // 맵을 벗어났는지 판단
-                if(0>nextx || nextx>=N ||
-                  0>nexty || nexty >=M) continue;
+                int nx = now[0]+dx[i];
+                int ny = now[1]+dy[i];
                 
-                // 맵을 지나갈 수 있는지 판단
-                if(maps[nexty][nextx] == 0) continue;
-                
-                // 방문 여부 판단
-                if(visited[nexty][nextx]) continue;
-                
-                // 도착 지점인지 판단
-                if(nextx == N-1 && nexty == M-1) return nmove+1;
-                
-                q.offer(new int[]{nextx, nexty, nmove+1});
-                visited[nexty][nextx] = true;
+                if(nx>=0 && nx<w && ny>=0 && ny<h){
+                    if(maps[ny][nx]== 1 && !visited[ny][nx]){
+                        q.offer(new int[]{nx,ny,now[2]+1});
+                        visited[ny][nx] = true;
+                    }
+                }
             }
         }
         return -1;
     }
     
     public int solution(int[][] maps) {
-        return bfs(maps);
+        int w = maps[0].length;
+        int h = maps.length;
+        boolean[][] visited = new boolean[h][w];
+        return bfs(w,h,visited,maps);
     }
 }
